@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>三门课程总计划 · 北京时间</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#f7f5f0;--paper:#fff;--ink:#1a1a1a;--ink2:#555;--ink3:#999;
+  --border:#e0dbd0;--hl:#f0ece4;
+  --di:#d97706;--di-bg:#fef9ec;
+  --ha:#7c3aed;--ha-bg:#f0ebff;
+  --j:#059669;--j-bg:#e8fdf4;
+  --red:#dc2626;--red-bg:#fff0f0;
+  --opt:#94a3b8;--opt-bg:#f8fafc;
+}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans SC',sans-serif;font-weight:300;}
+.page{max-width:1200px;margin:0 auto;padding:40px 16px 80px;}
+
+/* Header */
+.hdr{border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;}
+h1{font-family:'Fraunces',serif;font-size:clamp(1.3rem,3vw,2rem);font-weight:900;}
+.hdr-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3);letter-spacing:2px;margin-top:5px;}
+.tz-tag{font-family:'JetBrains Mono',monospace;font-size:11px;background:var(--paper);border:1px solid var(--border);padding:5px 12px;border-radius:4px;color:var(--ink2);}
+
+/* Legend */
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px;}
+.leg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);background:var(--paper);border:1px solid var(--border);border-radius:4px;padding:5px 10px;}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* Note */
+.note{background:#fffbea;border:1px solid #e9d46a;border-radius:6px;padding:11px 16px;font-size:11.5px;color:var(--ink2);margin-bottom:22px;line-height:1.8;}
+.note strong{color:var(--ink);}
+
+/* Tabs */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.tab{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:6px 13px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:var(--paper);color:var(--ink2);transition:.15s;}
+.tab:hover{border-color:var(--ink);color:var(--ink);}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.wv{display:none;}.wv.active{display:block;}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:50px repeat(7,1fr);border:1px solid var(--border);border-radius:8px 8px 0 0;overflow:hidden;background:var(--paper);box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.corner{background:#eeebe3;border-right:1px solid var(--border);border-bottom:2px solid var(--border);display:flex;align-items:center;justify-content:center;}
+.corner span{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink3);letter-spacing:1px;}
+.dh{background:#eeebe3;border-right:1px solid var(--border);border-bottom:2px solid var(--border);padding:9px 4px;text-align:center;}
+.dh:last-child{border-right:none;}
+.dn{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink3);text-transform:uppercase;}
+.dd{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:500;color:var(--ink);margin-top:3px;}
+.dd.today{background:var(--ink);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:3px auto 0;font-size:.8rem;}
+.tc{background:#f9f7f3;border-right:1px solid var(--border);border-bottom:1px solid var(--hl);display:flex;align-items:flex-start;justify-content:center;padding-top:3px;height:40px;}
+.tl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink3);}
+.slot{border-right:1px solid var(--border);border-bottom:1px solid var(--hl);height:40px;position:relative;}
+.slot:last-child{border-right:none;}
+
+/* Blocks */
+.blk{position:absolute;left:2px;right:2px;border-radius:3px;padding:2px 5px;font-size:9px;line-height:1.3;border-left:3px solid;z-index:2;overflow:hidden;cursor:default;}
+.blk:hover{z-index:20;overflow:visible;box-shadow:0 3px 12px rgba(0,0,0,0.15);}
+.blk .bt{font-family:'JetBrains Mono',monospace;font-size:7.5px;opacity:.6;display:block;margin-bottom:1px;}
+.blk.ha{background:var(--ha-bg);border-color:var(--ha);color:#3b0764;}
+.blk.opt{background:var(--opt-bg);border-color:var(--opt);color:#475569;border-style:dashed;}
+.blk.hadl{background:var(--red-bg);border-color:var(--red);color:#7f1d1d;font-weight:600;}
+.blk.jdl{background:var(--j-bg);border-color:var(--j);color:#064e3b;font-weight:600;}
+.blk.didl{background:var(--di-bg);border-color:var(--di);color:#78350f;font-weight:600;}
+
+/* Checklist */
+.cl{background:var(--paper);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:24px 22px 28px;}
+.cl-hd{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.cl-hd::after{content:'';flex:1;height:1px;background:var(--border);}
+.cl-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.cl-ct{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:7px;border-bottom:2px solid;}
+.cl-ct.di{color:var(--di);border-color:var(--di);}
+.cl-ct.ha{color:var(--ha);border-color:var(--ha);}
+.cl-ct.j{color:var(--j);border-color:var(--j);}
+.ci{display:flex;align-items:flex-start;gap:8px;margin-bottom:11px;}
+.ci input[type=checkbox]{appearance:none;-webkit-appearance:none;width:15px;height:15px;border-radius:3px;border:1.5px solid #ccc;flex-shrink:0;margin-top:2px;cursor:pointer;position:relative;background:#fff;transition:.15s;}
+.ci input:checked{background:var(--ink);border-color:var(--ink);}
+.ci input.di-c:checked{background:var(--di);border-color:var(--di);}
+.ci input.ha-c:checked{background:var(--ha);border-color:var(--ha);}
+.ci input.j-c:checked{background:var(--j);border-color:var(--j);}
+.ci input:checked::after{content:'✓';position:absolute;top:-1px;left:2px;font-size:10px;color:#fff;font-weight:700;}
+.ci-lbl{font-size:12px;color:var(--ink2);line-height:1.55;cursor:pointer;}
+.ci input:checked~.ci-lbl{color:var(--ink3);text-decoration:line-through;}
+.ci-rel{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--j);display:block;margin-top:2px;}
+.ci-dl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--red);display:block;margin-top:1px;}
+@media(max-width:700px){.cl-cols{grid-template-columns:1fr;}}
+footer{margin-top:48px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--ink3);}
+
+/* Links bar */
+.links-bar{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin-bottom:22px;}
+.links-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;color:var(--ink);margin-bottom:14px;}
+.links-row{display:grid;grid-template-columns:1fr 2fr;gap:20px;}
+.link-group{display:flex;flex-direction:column;gap:8px;}
+.link-group-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+.zlink{display:flex;flex-direction:column;padding:10px 14px;border-radius:6px;text-decoration:none;font-size:12.5px;font-weight:500;transition:.15s;border:1px solid transparent;}
+.zlink span{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:300;margin-top:3px;opacity:.7;}
+.zlink:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,0.1);}
+.ha-lnk{background:var(--ha-bg);color:#3b0764;border-color:rgba(124,58,237,0.2);}
+.ha-lnk:hover{background:#e4d9ff;border-color:var(--ha);}
+.di-lnk{background:var(--di-bg);color:#78350f;border-color:rgba(217,119,6,0.2);}
+.di-lnk:hover{background:#fde68a;border-color:var(--di);}
+.opt-lnk{opacity:.75;}
+@media(max-width:700px){.links-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="hdr">
+  <div>
+    <h1>三门课程总计划表</h1>
+    <div class="hdr-sub">DI101 · HA30 · J124 &nbsp;|&nbsp; UC BERKELEY SUMMER 2026 &nbsp;|&nbsp; 05.25 – 07.05</div>
+  </div>
+  <div class="tz-tag">🕐 北京时间 CST (UTC+8)</div>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="ld" style="background:var(--ha)"></div>HA30 上课（必须出勤）</div>
+  <div class="leg"><div class="ld" style="background:var(--ha);opacity:.3;border:1px dashed var(--ha)"></div>可选 Zoom / 同步讨论</div>
+  <div class="leg"><div class="ld" style="background:var(--red)"></div>HA30 截止 / 考试</div>
+  <div class="leg"><div class="ld" style="background:var(--j)"></div>J124 截止</div>
+  <div class="leg"><div class="ld" style="background:var(--di)"></div>DI101 截止</div>
+</div>
+
+<div class="note">
+  ⚠️ <strong>时区换算：</strong>PDT 12:00pm → 北京时间次日 <strong>03:00</strong>（HA30上课）｜ PDT 11:59pm → 北京时间次日 <strong>14:59</strong>（截止）｜ J124视频每周二PDT 9am发布 → 北京时间<strong>周三 00:00</strong><br>
+  📌 <strong>HA30出勤占成绩30%，不可缺席，不可只挂线不互动（ghost attend只给一半分）</strong>
+</div>
+
+<div class="links-bar">
+  <div class="links-title">🔗 快速链接 · 点击直接进入</div>
+  <div class="links-row">
+    <div class="link-group">
+      <div class="link-group-label" style="color:var(--ha)">🟣 HA30 艺术史</div>
+      <a href="https://zoom.us/j/4462183919" target="_blank" class="zlink ha-lnk">
+        📹 Zoom 上课链接
+        <span>ID: 446 218 3919 · 周二/三/四 03:00–05:00</span>
+      </a>
+    </div>
+    <div class="link-group">
+      <div class="link-group-label" style="color:var(--di)">🟡 DI101 数字基础设施（统一Zoom链接）</div>
+      <a href="https://berkeley.zoom.us/j/97047299482?pwd=ufAtdMBQ5jDC6prOb1asPUTFLoKHUj.1" target="_blank" class="zlink di-lnk">
+        🎤 Guest Lecture（可选）
+        <span>周三 01:00–02:30 北京时间</span>
+      </a>
+      <a href="https://berkeley.zoom.us/j/97047299482?pwd=ufAtdMBQ5jDC6prOb1asPUTFLoKHUj.1" target="_blank" class="zlink di-lnk">
+        💬 Discussion: This Week in Digital Infrastructure（可选）
+        <span>周五 01:00–02:00 北京时间</span>
+      </a>
+      <a href="https://berkeley.zoom.us/j/97047299482?pwd=ufAtdMBQ5jDC6prOb1asPUTFLoKHUj.1" target="_blank" class="zlink di-lnk opt-lnk">
+        🕐 Office Hours（可选，drop-in）
+        <span>周五 02:00–03:00 北京时间</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="show(1)">第1周 05/25–31</div>
+  <div class="tab" onclick="show(2)">第2周 06/01–07</div>
+  <div class="tab" onclick="show(3)">第3周 06/08–14</div>
+  <div class="tab" onclick="show(4)">第4周 06/15–21</div>
+  <div class="tab" onclick="show(5)">第5周 06/22–28</div>
+  <div class="tab" onclick="show(6)">第6周 06/29–07/05</div>
+</div>
+
+<div id="w1" class="wv active"></div>
+<div id="w2" class="wv"></div>
+<div id="w3" class="wv"></div>
+<div id="w4" class="wv"></div>
+<div id="w5" class="wv"></div>
+<div id="w6" class="wv"></div>
+
+<footer>DI101 · HA30 · J124 &nbsp;·&nbsp; Berkeley Summer 2026 &nbsp;·&nbsp; 北京时间版 · 制作于 2026.05.25</footer>
+</div>
+
+<script>
+const SH=40;
+const W={
+  1:{
+    dates:['25','26','27','28','29','30','31'],
+    blocks:[
+      // HA30 上课 Tue/Wed/Thu 03:00-05:00
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 第一堂：First-day logistics，南亚艺术史的"开始"？'},
+      {d:2,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 The Mauryas, Ashoka the Great & Siddhartha'},
+      {d:3,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Stupas & Intro to Sanchi'},
+      // 可选
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A（周四 PDT 9:30am）'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      // 截止
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 1 截止 14:59'},
+      {d:6,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业1 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M01 Lec1：What Does the Internet Look Like?',rel:'05/25 发布',dl:'本周内'},
+        {t:'看 M01 Lec2：The Story of a Selfie',rel:'05/25 发布',dl:'本周内'},
+        {t:'看 M01 Lec3：What Role Does Digital Infrastructure Play in Everyday Life?',rel:'05/25 发布',dl:'本周内'},
+        {t:'看 M01 Lec4：How to Find Digital Infrastructure',rel:'05/25 发布',dl:'本周内'},
+        {t:'读：Tanwen Dawn-Hiscox "What is a Data Center?" (Data Center Dynamics, 2022)',rel:'05/25 发布',dl:'本周内'},
+        {t:'读：Michael Clare 文章（Submarine Telecoms Forum #133, Nov 2023）',rel:'05/25 发布',dl:'本周内'},
+        {t:'完成并提交 Quiz 1（8道选择题，120分钟内完成）',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖1（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'周二 03:00–05:00 出勤：First-day logistics，南亚艺术史的"开始"？',rel:'05/26 03:00',dl:'⏰ 05/26 必须出勤'},
+        {t:'周三 03:00–05:00 出勤：The Mauryas, Ashoka the Great & Siddhartha',rel:'05/27 03:00',dl:'⏰ 05/27 必须出勤'},
+        {t:'周四 03:00–05:00 出勤：Stupas & Intro to Sanchi',rel:'05/28 03:00',dl:'⏰ 05/28 必须出勤'},
+        {t:'每节课积极参与互动（提问/回答，保证参与分 5%/unit）',rel:'每节课',dl:'每节课'},
+      ],
+      j:[
+        {t:'安装 Google Chrome、Github Desktop、OpenRefine',rel:'05/26 课程开始',dl:'尽快完成'},
+        {t:'注册账号：Github.com / Datawrapper.de / OpenRefine',rel:'05/26 课程开始',dl:'尽快完成'},
+        {t:'完成 Welcome Assignment（确认视频观看数据正常录入）',rel:'05/26 发布',dl:'尽快完成'},
+        {t:'看 Week 1 视频：数据新闻简史 / 写作与数字 / 统计学基础 / 如何读一份研究报告',rel:'05/26 发布',dl:'本周内'},
+        {t:'完成并提交 作业1',rel:'05/26 发布',dl:'⏰ 周日截止 → 下周一 14:59'},
+      ],
+    }
+  },
+  2:{
+    dates:['01','02','03','04','05','06','07'],
+    blocks:[
+      {d:0,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Aniconism at Sanchi & Bharhut（讨论阅读）'},
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 First Buddha Icons at Gandhara, Mathura & Amaravati'},
+      {d:2,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Buddhism on the Silk Route（Tibet/Sri Lanka/Indonesia）'},
+      {d:3,s:3,e:5,c:'hadl',tag:'HA30 ⏰考试',tx:'🏛 Unit 1 考试（open-note，前30分钟quiz游戏可加分）'},
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      {d:0,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'讨论帖1 截止 14:59'},
+      {d:0,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业1 最终截止（迟交扣分）14:59'},
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 2 截止 14:59'},
+      {d:6,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业2 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M02 Lec1：Networks before the Internet – A Short History of Subsea Cables',rel:'06/01 发布',dl:'本周内'},
+        {t:'看 M02 Lec2：Computers before the Internet – A Short History of Data Centers',rel:'06/01 发布',dl:'本周内'},
+        {t:'看 M02 Lec3：Networks + Computers – A Short History of the Internet',rel:'06/01 发布',dl:'本周内'},
+        {t:'看 M02 Lec4：Interconnection – From Carrier Hotels to IXPs',rel:'06/01 发布',dl:'本周内'},
+        {t:'看 M02 Lec5：The Emergence of the Modern Colocation Data Center',rel:'06/01 发布',dl:'本周内'},
+        {t:'读：Peter Judge "How Peering went Global"（Data Center Dynamics, Mar 2023）',rel:'06/01 发布',dl:'本周内'},
+        {t:'读：Yamba et al. "The Status of IXPs in Africa"（IEEE ITNAC 2022）',rel:'06/01 发布',dl:'本周内'},
+        {t:'完成并提交 Quiz 2',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖2（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'读：Coomaraswamy "The Origin of the Buddha Image"（Art Bulletin 9.4, 1927）',rel:'06/01 前',dl:'⏰ 06/01 上课前读完'},
+        {t:'周一 03:00 出勤：Aniconism at Sanchi & Bharhut（课上讨论阅读）',rel:'06/01 03:00',dl:'⏰ 06/01 必须出勤'},
+        {t:'周二 03:00 出勤：First Buddha Icons at Gandhara, Mathura & Amaravati',rel:'06/02 03:00',dl:'⏰ 06/02 必须出勤'},
+        {t:'周三 03:00 出勤：Buddhism on the Silk Route',rel:'06/03 03:00',dl:'⏰ 06/03 必须出勤'},
+        {t:'周四 03:00 出勤：Unit 1 考试（open-note，前30分钟quiz游戏可额外加分）',rel:'06/04 03:00',dl:'⏰ 06/04 考试！必须出勤'},
+      ],
+      j:[
+        {t:'看 Week 2 视频：电子表格基础 / filter & sort / 公式 / Pivot Table',rel:'⬇️ 周三 00:00 发布',dl:'本周内'},
+        {t:'完成并提交 作业2（电子表格练习）',rel:'周三 00:00 发布',dl:'⏰ 周日截止 → 下周一 14:59'},
+      ],
+    }
+  },
+  3:{
+    dates:['08','09','10','11','12','13','14'],
+    blocks:[
+      {d:0,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Hindu Temple Origins in Central India – Caves（讨论阅读）'},
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Nagara Style Temples'},
+      {d:2,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Dravida Temples & South Indian / Southeast Asian Hindu Networks'},
+      {d:3,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Stone, Bronze & Ivory Sculpture'},
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      {d:0,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'讨论帖2 截止 14:59'},
+      {d:0,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业2 最终截止 14:59'},
+      {d:3,s:15,e:16,c:'didl',tag:'DI101 ⏰',tx:'Project A 截止 15:59'},
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 3 截止 14:59'},
+      {d:6,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业3 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M03 Lec1：What is the Cloud?（时分技术/IaaS/PaaS/SaaS/云所有权）',rel:'06/08 发布',dl:'本周内'},
+        {t:'看 M03 Lec2：Scaling Up – The Rise of the Hyperscale Data Center',rel:'06/08 发布',dl:'本周内'},
+        {t:'看 M03 Lec3：Moving Out – The Edge Data Center（延迟的重要性）',rel:'06/08 发布',dl:'本周内'},
+        {t:'读：Sharifzadeh et al. "Cloud Computing and Its Impact on Industry 4.0"（Wiley, 2022）',rel:'06/08 发布',dl:'本周内'},
+        {t:'读：Hugh Taylor "Chapter 1: The Edge – An Overview" & "Chapter 3: Conceptualizing the Edge Data Center"',rel:'06/08 发布',dl:'本周内'},
+        {t:'Project A：选定研究地点（需同时有海底电缆 + 数据中心，不要选美国/中国整国）',rel:'06/08 开始',dl:'周四前'},
+        {t:'Project A：建基础设施清单（海底电缆/登陆站/数据中心/IXP，可含历史/计划中的）',rel:'06/08 开始',dl:'周四前'},
+        {t:'Project A：制作地图（单张图片，Google Earth/PPT/手绘均可）',rel:'06/08 开始',dl:'周四前'},
+        {t:'提交 Project A',rel:'06/08 开始',dl:'⏰ 周四 15:59'},
+        {t:'完成并提交 Quiz 3',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖3（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'读：Diana Eck "Image, Temple, Pilgrimage" in Darśan（Anima Books, 1981）pp.58–75',rel:'06/08 前',dl:'⏰ 06/08 上课前读完'},
+        {t:'周一 03:00 出勤：Hindu Temple Origins – Caves（课上讨论阅读）',rel:'06/08 03:00',dl:'⏰ 06/08 必须出勤'},
+        {t:'周二 03:00 出勤：Nagara Style Temples',rel:'06/09 03:00',dl:'⏰ 06/09 必须出勤'},
+        {t:'周三 03:00 出勤：Dravida Temples & SE Asian Hindu Networks',rel:'06/10 03:00',dl:'⏰ 06/10 必须出勤'},
+        {t:'周四 03:00 出勤：Stone, Bronze & Ivory Sculpture',rel:'06/11 03:00',dl:'⏰ 06/11 必须出勤'},
+      ],
+      j:[
+        {t:'看 Week 3 视频：公共记录申请（FOIA）/ Census & 数据库查询 / Github发布 / 群组项目说明',rel:'⬇️ 周三 00:00 发布',dl:'本周内'},
+        {t:'完成并提交 作业3（含 Github 操作）',rel:'周三 00:00 发布',dl:'⏰ 周日截止 → 下周一 14:59'},
+      ],
+    }
+  },
+  4:{
+    dates:['15','16','17','18','19','20','21'],
+    blocks:[
+      {d:0,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Malabar Christianity & Monsoon Islam'},
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Delhi Sultanate Architecture（讨论阅读）'},
+      {d:2,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Localizing & Globalizing in Gujarat & Bengal'},
+      {d:3,s:3,e:5,c:'hadl',tag:'HA30 ⏰考试',tx:'🏛 Unit 2 考试（open-note，前30分钟quiz游戏可加分）'},
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      {d:0,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'讨论帖3 截止 14:59'},
+      {d:0,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业3 最终截止 14:59'},
+      {d:3,s:15,e:16,c:'didl',tag:'DI101 ⏰',tx:'Project B 截止 15:59'},
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 4 截止 14:59'},
+      {d:6,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业4 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M04 Lec1：White Space（机架/机柜/冷热通道管理）',rel:'06/15 发布',dl:'本周内'},
+        {t:'看 M04 Lec2：Grey Space（冷却系统/UPS/发电机）',rel:'06/15 发布',dl:'本周内'},
+        {t:'读：Barroso, Hölzle & Ranganathan "Introduction" in The Datacenter as a Computer（pp.6–14）',rel:'06/15 发布',dl:'本周内'},
+        {t:'读：Vlad-Gabriel Anghel "All You Need to Know about Microgrids"（DCD, Jun 2023）',rel:'06/15 发布',dl:'本周内'},
+        {t:'Project B：找4篇行业来源（Submarine Telecoms Forum 或 Data Center Dynamics，与选定地点相关）',rel:'06/15 开始',dl:'周四前'},
+        {t:'Project B：找1篇学术来源（Google Scholar / UC Berkeley Library，找不到可用第5篇行业来源代替）',rel:'06/15 开始',dl:'周四前'},
+        {t:'Project B：为每篇来源写注释（各100–150字，说明与地点的关联及课程联系）',rel:'06/15 开始',dl:'周四前'},
+        {t:'提交 Project B（注释参考文献）',rel:'06/15 开始',dl:'⏰ 周四 15:59'},
+        {t:'完成并提交 Quiz 4',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖4（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'读：Eaton & Wagoner "Temples and Conquest" in Power, Memory, Architecture（Oxford, 2014）pp.39–65',rel:'06/15 前',dl:'⏰ 06/16 上课前读完'},
+        {t:'周一 03:00 出勤：Malabar Christianity & Monsoon Islam',rel:'06/15 03:00',dl:'⏰ 06/15 必须出勤'},
+        {t:'周二 03:00 出勤：Delhi Sultanate Architecture（课上讨论阅读）',rel:'06/16 03:00',dl:'⏰ 06/16 必须出勤'},
+        {t:'周三 03:00 出勤：Localizing & Globalizing in Gujarat & Bengal',rel:'06/17 03:00',dl:'⏰ 06/17 必须出勤'},
+        {t:'周四 03:00 出勤：Unit 2 考试（open-note，前30分钟quiz游戏可额外加分）',rel:'06/18 03:00',dl:'⏰ 06/18 考试！必须出勤'},
+      ],
+      j:[
+        {t:'看 Week 4 视频：数据可视化概念 / 图表类型 / Datawrapper使用 / Choropleth地图 / 设计原则',rel:'⬇️ 周三 00:00 发布',dl:'本周内'},
+        {t:'完成并提交 作业4（Datawrapper图表或地图）',rel:'周三 00:00 发布',dl:'⏰ 周日截止 → 下周一 14:59'},
+      ],
+    }
+  },
+  5:{
+    dates:['22','23','24','25','26','27','28'],
+    blocks:[
+      {d:0,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Mughal Painting & Architecture Part I（讨论阅读）'},
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Mughal Painting & Architecture Part II'},
+      {d:2,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Colonial Encounters'},
+      // Thu 06/25: NO CLASS
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      {d:0,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'讨论帖4 截止 14:59'},
+      {d:0,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业4 最终截止 14:59'},
+      {d:3,s:15,e:16,c:'didl',tag:'DI101 ⏰',tx:'Project C 截止 15:59'},
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 5 截止 14:59'},
+      {d:6,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业5 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M05 Lec1：The Cable and the Wet Plant（电缆材料/repeaters/branching units/供应商）',rel:'06/22 发布',dl:'本周内'},
+        {t:'看 M05 Lec2：The Dry Plant & the Cable Landing Station（历史/定义/架构趋势）',rel:'06/22 发布',dl:'本周内'},
+        {t:'看 M05 Lec3：Optical Technology and Capacity（光纤历史/技术进步/容量提升）',rel:'06/22 发布',dl:'本周内'},
+        {t:'读：Thomas et al. "Technology in Undersea Cable Systems: 50 Years of Progress"（Marine Technology Society Journal, 2015）',rel:'06/22 发布',dl:'本周内'},
+        {t:'Project C：制作 PowerPoint（最重要趋势、独特规律、关键转折点，分析policy/player/technology因素）',rel:'06/22 开始',dl:'周四前'},
+        {t:'Project C：录制 2–3 分钟视频（不超过3分钟）',rel:'06/22 开始',dl:'周四前'},
+        {t:'提交 Project C（PPT + 视频）',rel:'06/22 开始',dl:'⏰ 周四 15:59'},
+        {t:'完成并提交 Quiz 5',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖5（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'读：Ramaswamy "Conceit of the Globe in Mughal Visual Practice"（CSSH 49.4, 2007）',rel:'06/22 前',dl:'⏰ 06/22 上课前读完'},
+        {t:'周一 03:00 出勤：Mughal Painting & Architecture Part I（课上讨论阅读）',rel:'06/22 03:00',dl:'⏰ 06/22 必须出勤'},
+        {t:'周二 03:00 出勤：Mughal Painting & Architecture Part II',rel:'06/23 03:00',dl:'⏰ 06/23 必须出勤'},
+        {t:'周三 03:00 出勤：Colonial Encounters',rel:'06/24 03:00',dl:'⏰ 06/24 必须出勤'},
+        {t:'周四 停课 · 观看《棋手》The Chess Players（Satyajit Ray, 1977，约3小时）',rel:'06/25',dl:'⏰ 06/25 必须看（期末影评需要）'},
+        {t:'观影时做详细笔记（为期末3–4页影评准备）',rel:'06/25',dl:'06/25'},
+      ],
+      j:[
+        {t:'看 Week 5 视频：Python入门 / Notebooks使用 / 用代码分析数据集 / 网页爬虫基础',rel:'⬇️ 周三 00:00 发布',dl:'本周内'},
+        {t:'完成并提交 作业5（Python / 爬虫练习）',rel:'周三 00:00 发布',dl:'⏰ 周日截止 → 下周一 14:59'},
+      ],
+    }
+  },
+  6:{
+    dates:['29','30','01','02','03','04','05'],
+    blocks:[
+      {d:0,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 Orientalism & the Picturesque'},
+      {d:1,s:3,e:5,c:'ha',tag:'HA30 上课',tx:'🏛 The Colonial Project & Raja Ravi Varma'},
+      {d:2,s:3,e:5,c:'hadl',tag:'HA30 ⏰小测',tx:'🏛 Wrapping Up + Unit 3 Quiz-game（5%，只在课上进行）'},
+      // Thu 07/02: NO CLASS
+      {d:3,s:0.5,e:1.5,c:'opt',tag:'J124 可选',tx:'💬 可选 Zoom Q&A（最后一次）'},
+      {d:4,s:2,e:3.5,c:'opt',tag:'DI101 可选',tx:'💬 可选同步讨论 "This Week in Digital Infrastructure"'},
+      {d:0,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'讨论帖5 截止 14:59'},
+      {d:0,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'作业5 最终截止 14:59'},
+      {d:3,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Project D 截止 15:59'},
+      {d:3,s:15,e:16,c:'jdl',tag:'J124 ⏰',tx:'期末项目截止 → 次日(07/03) 14:59'},
+      {d:4,s:14,e:15,c:'hadl',tag:'HA30 ⏰',tx:'期末影评截止 → 次日(07/04) 14:59'},
+      {d:6,s:14,e:15,c:'didl',tag:'DI101 ⏰',tx:'Quiz 6 截止 14:59'},
+      {d:6,s:15,e:16,c:'didl',tag:'DI101 ⏰',tx:'讨论帖6 截止 → 下周一 14:59'},
+    ],
+    cl:{
+      di:[
+        {t:'看 M06 Lec1：What is the Last Mile?（最后一公里技术，含气球/无人机/光束实验）',rel:'06/29 发布',dl:'本周内'},
+        {t:'看 M06 Lec2：Cellular Infrastructure – The Basics（基站类型/频谱管理/5G与AI）',rel:'06/29 发布',dl:'本周内'},
+        {t:'看 M06 Lec3：Satellites – The Basics（卫星历史/主要用途/LEO卫星新时代）',rel:'06/29 发布',dl:'本周内'},
+        {t:'读：Wang & Li "Satellite Computing: Vision and Challenges"（IEEE IoT Journal, Dec 2023）',rel:'06/29 发布',dl:'本周内'},
+        {t:'Project D（选1）：写1750–2250字文章（STF或DCD格式，说明研究问题+证据）',rel:'06/29 开始',dl:'周四前'},
+        {t:'Project D（或）：制作研究海报（引言+3段正文+结论，2个视觉元素，引用8–10个来源）',rel:'06/29 开始',dl:'周四前'},
+        {t:'提交 Project D',rel:'06/29 开始',dl:'⏰ 周四 15:59'},
+        {t:'完成并提交 Quiz 6',rel:'本周发布',dl:'⏰ 周日 14:59'},
+        {t:'写讨论帖6（100–150字）并提交',rel:'本周发布',dl:'⏰ 下周一 14:59'},
+      ],
+      ha:[
+        {t:'读：Bernard Cohn "Introduction" in Colonialism and its Forms of Knowledge（Princeton, 1996）pp.3–15',rel:'06/29 前',dl:'06/29 上课前读完'},
+        {t:'读：Vinay Lal "Masculinity and Femininity in The Chess Players"（Manushi 92-93, 1996）pp.41–50',rel:'06/29 前',dl:'06/29 上课前读完'},
+        {t:'周一 03:00 出勤：Orientalism & the Picturesque',rel:'06/29 03:00',dl:'⏰ 06/29 必须出勤'},
+        {t:'周二 03:00 出勤：The Colonial Project & Raja Ravi Varma',rel:'06/30 03:00',dl:'⏰ 06/30 必须出勤'},
+        {t:'周三 03:00 出勤：Wrapping Up + Unit 3 Quiz-game（必须出勤！quiz只在课上进行）',rel:'07/01 03:00',dl:'⏰ 07/01 必须出勤+参与quiz'},
+        {t:'周四 停课 · 完成期末影评（3–4页，分析《棋手》，结合两篇阅读材料）',rel:'07/02',dl:'07/02 完成'},
+        {t:'提交期末影评',rel:'07/02 完成',dl:'⏰ 07/03（周五）→ 次日 14:59'},
+      ],
+      j:[
+        {t:'看 Week 6 视频：AI与大语言模型原理 / AI在数据新闻报道中的应用 / 工具使用',rel:'⬇️ 周三 00:00 发布',dl:'本周内'},
+        {t:'完成并提交 期末数据新闻研究项目（群组项目，每人独立贡献评分）',rel:'课程开始积累',dl:'⏰ 07/02（周四）→ 次日 14:59'},
+      ],
+    }
+  }
+};
+
+function makeGrid(wn){
+  const w=W[wn];
+  const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  let h=`<div class="grid">`;
+  h+=`<div class="corner"><span>时间</span></div>`;
+  for(let d=0;d<7;d++){
+    const today=wn===1&&d===0;
+    h+=`<div class="dh"><div class="dn">${days[d]}</div>`;
+    h+=today?`<div class="dd today">${w.dates[d]}</div>`:`<div class="dd">${w.dates[d]}</div>`;
+    h+=`</div>`;
+  }
+  for(let hr=0;hr<24;hr++){
+    h+=`<div class="tc"><span class="tl">${String(hr).padStart(2,'0')}:00</span></div>`;
+    for(let d=0;d<7;d++){
+      const bs=w.blocks.filter(b=>b.d===d&&b.s===hr);
+      let inner='';
+      for(const b of bs){
+        const ht=(b.e-b.s)*SH-4;
+        inner+=`<div class="blk ${b.c}" style="top:2px;height:${ht}px"><span class="bt">${b.tag}</span>${b.tx}</div>`;
+      }
+      h+=`<div class="slot">${inner}</div>`;
+    }
+  }
+  h+=`</div>`;
+  return h;
+}
+
+function makeCL(wn){
+  const cl=W[wn].cl;
+  const sk=`w${wn}`;
+  function col(items,course){
+    const titles={di:'🟡 DI101 数字基础设施',ha:'🟣 HA30 艺术史',j:'🟢 J124 数据新闻'};
+    let h=`<div><div class="cl-ct ${course}">${titles[course]}</div>`;
+    items.forEach((item,i)=>{
+      const id=`${sk}_${course}_${i}`;
+      h+=`<div class="ci">
+        <input type="checkbox" id="${id}" class="${course}-c" onchange="sv('${sk}','${course}',${i},this.checked)">
+        <label class="ci-lbl" for="${id}">${item.t}
+          <span class="ci-rel">📅 发布：${item.rel}</span>
+          <span class="ci-dl">⏰ 截止：${item.dl}</span>
+        </label>
+      </div>`;
+    });
+    return h+`</div>`;
+  }
+  return `<div class="cl">
+    <div class="cl-hd">✅ 本周任务 Checklist</div>
+    <div class="cl-cols">${col(cl.di,'di')}${col(cl.ha,'ha')}${col(cl.j,'j')}</div>
+  </div>`;
+}
+
+function sv(sk,course,i,checked){
+  sessionStorage.setItem(`${sk}_${course}_${i}`,checked?'1':'0');
+}
+function ld(wn){
+  const sk=`w${wn}`;
+  ['di','ha','j'].forEach(course=>{
+    W[wn].cl[course].forEach((_,i)=>{
+      if(sessionStorage.getItem(`${sk}_${course}_${i}`)===('1')){
+        const el=document.getElementById(`${sk}_${course}_${i}`);
+        if(el)el.checked=true;
+      }
+    });
+  });
+}
+function show(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n-1));
+  document.querySelectorAll('.wv').forEach((v,i)=>v.classList.toggle('active',i===n-1));
+  ld(n);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  for(let w=1;w<=6;w++){
+    document.getElementById(`w${w}`).innerHTML=makeGrid(w)+makeCL(w);
+  }
+  ld(1);
+});
+</script>
+</body>
+</html>
